@@ -1,7 +1,5 @@
 "homepage": "https://ze07.github.io/teaching-expo",
-//------------------------------------------
-// package.json
-//------------------------------------------
+
 {
   "name": "teaching-expo",
   "version": "1.0.0",
