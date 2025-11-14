@@ -1,6 +1,62 @@
 // FULL REACT PROJECT STRUCTURE
 // All files concatenated in one document. Copy into your local folder structure.
 
+//------------------------------------------
+// package.json
+//------------------------------------------
+{
+  "name": "teaching-expo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "framer-motion": "^11.0.0",
+    "lucide-react": "^0.424.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.34",
+    "@types/react-dom": "^18.2.14",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.4.3",
+    "vite": "^5.0.0"
+  }
+}
+
+//------------------------------------------
+// vite.config.js
+//------------------------------------------
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+export default defineConfig({
+  plugins: [react()],
+  base: "/teaching-expo/"
+});
+
+//------------------------------------------
+// tailwind.config.js
+//------------------------------------------
+module.exports = {
+  content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
+  theme: { extend: {} },
+  plugins: []
+};
+
+//------------------------------------------
+// postcss.config.js
+//------------------------------------------
+module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {}
+  }
+};
 
 //------------------------------------------
 // index.html
