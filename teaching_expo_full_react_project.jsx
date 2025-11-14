@@ -1,297 +1,256 @@
-/*
-  Teaching Materials Exposition
-  Single-file React app (App.jsx)
+// FULL REACT PROJECT STRUCTURE
+// All files concatenated in one document. Copy into your local folder structure.
 
-  Instructions:
-  1. Create a new React app (Vite or CRA). Example with Vite:
-     npm create vite@latest teaching-expo -- --template react
-     cd teaching-expo
-  2. Install dependencies:
-     npm install react-router-dom framer-motion lucide-react
-  3. Add Tailwind CSS (follow Tailwind + Vite guide). Minimal steps:
-     npm install -D tailwindcss postcss autoprefixer
-     npx tailwindcss init -p
-     // add tailwind config and import './index.css' with @tailwind directives
-  4. Replace src/App.jsx with this file and start dev server: npm run dev
-
-  Notes:
-  - This file is intentionally self-contained for preview and iteration.
-  - Replace sample data with your real course materials and file URLs.
-*/
-
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
-import { MotionConfig, motion } from 'framer-motion';
-import { Menu, FileText, BookOpen, Mail, User } from 'lucide-react';
-
-// ---------- Sample data ----------
-const SAMPLE_COURSES = [
-  {
-    id: 'ict101',
-    title: 'Information & Communication Technology (ICT) - L1',
-    short: 'Fundamentals of ICT, Microsoft Word, Excel basics and online tools.',
-    semester: '2025 Spring',
-    resources: [
-      { id: 'r1', title: 'Lecture Slides: ICT Basics (PDF)', type: 'pdf', url: '#' },
-      { id: 'r2', title: 'Word Templates (DOCX)', type: 'docx', url: '#' },
-      { id: 'r3', title: 'Practical Exercises (ZIP)', type: 'zip', url: '#' }
-    ]
+//------------------------------------------
+// package.json
+//------------------------------------------
+{
+  "name": "teaching-expo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
-  {
-    id: 'eng101',
-    title: 'English for Communication - L1',
-    short: 'Course materials for oral/written communication and vocabulary.',
-    semester: '2025 Spring',
-    resources: [
-      { id: 'r4', title: 'Workbook (PDF)', type: 'pdf', url: '#' },
-      { id: 'r5', title: 'Exam Revision Pack', type: 'pdf', url: '#' }
-    ]
+  "dependencies": {
+    "framer-motion": "^11.0.0",
+    "lucide-react": "^0.424.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.34",
+    "@types/react-dom": "^18.2.14",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.4.3",
+    "vite": "^5.0.0"
   }
-];
-
-// ---------- Utilities ----------
-function useLocalStorage(key, initial) {
-  const [state, setState] = useState(() => {
-    try {
-      const raw = localStorage.getItem(key);
-      return raw ? JSON.parse(raw) : initial;
-    } catch (e) {
-      return initial;
-    }
-  });
-  useEffect(() => {
-    try { localStorage.setItem(key, JSON.stringify(state)); } catch (e) {}
-  }, [key, state]);
-  return [state, setState];
 }
 
-// ---------- Components ----------
-function Nav() {
+//------------------------------------------
+// vite.config.js
+//------------------------------------------
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+export default defineConfig({
+  plugins: [react()],
+  base: "/teaching-expo/"
+});
+
+//------------------------------------------
+// tailwind.config.js
+//------------------------------------------
+module.exports = {
+  content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
+  theme: { extend: {} },
+  plugins: []
+};
+
+//------------------------------------------
+// postcss.config.js
+//------------------------------------------
+module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {}
+  }
+};
+
+//------------------------------------------
+// index.html
+//------------------------------------------
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teaching Materials Expo</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+
+//------------------------------------------
+// src/main.jsx
+//------------------------------------------
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import "./index.css";
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+
+//------------------------------------------
+// src/index.css
+//------------------------------------------
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+//------------------------------------------
+// src/App.jsx
+//------------------------------------------
+import React from "react";
+import Navbar from "./components/Navbar";
+import Hero from "./components/Hero";
+import Courses from "./components/Courses";
+import Footer from "./components/Footer";
+
+export default function App() {
   return (
-    <nav className="bg-white border-b shadow-sm">
-      <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Link to="/" className="text-xl font-semibold">Teaching Expo</Link>
-          <div className="hidden md:flex items-center gap-2 text-sm text-slate-600">
-            <Link to="/courses" className="px-3 py-1 hover:bg-slate-50 rounded">Courses</Link>
-            <Link to="/resources" className="px-3 py-1 hover:bg-slate-50 rounded">Resources</Link>
-            <Link to="/about" className="px-3 py-1 hover:bg-slate-50 rounded">About</Link>
-          </div>
-        </div>
-        <div className="flex items-center gap-3">
-          <Link to="/contact" className="text-sm px-3 py-1 border rounded hover:bg-slate-50">Contact</Link>
-        </div>
+    <div className="min-h-screen bg-gray-50">
+      <Navbar />
+      <Hero />
+      <Courses />
+      <Footer />
+    </div>
+  );
+}
+
+//------------------------------------------
+// src/components/Navbar.jsx
+//------------------------------------------
+import React from "react";
+import { BookOpen } from "lucide-react";
+
+export default function Navbar() {
+  return (
+    <nav className="w-full flex justify-between items-center px-8 py-4 bg-white shadow">
+      <div className="flex items-center gap-2 text-xl font-bold">
+        <BookOpen /> Teaching Expo
+      </div>
+      <div className="flex gap-6 text-gray-700 font-medium">
+        <a href="#courses">Courses</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
       </div>
     </nav>
   );
 }
 
-function Home({ courses }) {
-  return (
-    <MotionConfig>
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-6xl mx-auto px-6 py-10">
-        <header className="grid md:grid-cols-2 gap-8 items-center">
-          <div>
-            <h1 className="text-3xl md:text-4xl font-extrabold leading-tight">Teaching Materials Exposition</h1>
-            <p className="mt-4 text-slate-700">A curated hub of course materials, lecture slides, exercises and templates for university students. Designed to be clean, accessible and ready for classroom distribution.</p>
-            <div className="mt-6 flex gap-3">
-              <Link to="/courses" className="px-4 py-2 bg-slate-800 text-white rounded shadow-sm">Explore Courses</Link>
-              <Link to="/resources" className="px-4 py-2 border rounded">Browse Resources</Link>
-            </div>
-          </div>
-          <div className="bg-gradient-to-br from-white to-slate-50 p-6 rounded-lg border">
-            <h3 className="font-semibold">Quick Course Overview</h3>
-            <ul className="mt-4 space-y-3">
-              {courses.map(c => (
-                <li key={c.id} className="p-3 border rounded hover:shadow-sm">
-                  <div className="flex justify-between">
-                    <div>
-                      <div className="font-semibold">{c.title}</div>
-                      <div className="text-sm text-slate-600">{c.short}</div>
-                    </div>
-                    <div className="text-xs text-slate-500">{c.semester}</div>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </header>
+//------------------------------------------
+// src/components/Hero.jsx
+//------------------------------------------
+import React from "react";
+import { motion } from "framer-motion";
 
-        <section className="mt-10">
-          <h2 className="text-2xl font-semibold">Why this hub?</h2>
-          <div className="mt-4 text-slate-700">Centralizing materials helps students access content quickly, allows colleagues to reuse and adapt your resources, and presents your teaching practice professionally for applications and collaborations.</div>
-        </section>
-      </motion.div>
-    </MotionConfig>
+export default function Hero() {
+  return (
+    <section className="px-12 py-24 bg-gradient-to-br from-blue-100 to-purple-100 text-center">
+      <motion.h1
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="text-5xl font-bold mb-4"
+      >
+        Teaching Materials Exhibition
+      </motion.h1>
+
+      <p className="text-gray-700 text-lg max-w-2xl mx-auto">
+        A modern platform to showcase your teaching materials, courses, and academic resources.
+      </p>
+    </section>
   );
 }
 
-function Courses({ courses }) {
-  const navigate = useNavigate();
+//------------------------------------------
+// src/components/Courses.jsx
+//------------------------------------------
+import React from "react";
+import { motion } from "framer-motion";
+import { Folder } from "lucide-react";
+
+const sampleCourses = [
+  { title: "Machine Learning", desc: "Slides, labs, and exams." },
+  { title: "Data Structures", desc: "Full course materials & exercises." },
+  { title: "ICT for English Students", desc: "Practical introduction to ICT." }
+];
+
+export default function Courses() {
   return (
-    <div className="max-w-6xl mx-auto px-6 py-10">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-semibold">Courses</h2>
-        <button onClick={() => navigate('/courses/new')} className="text-sm px-3 py-2 border rounded">Add course</button>
-      </div>
-      <div className="mt-6 grid md:grid-cols-2 gap-6">
-        {courses.map(c => (
-          <div key={c.id} className="p-4 border rounded-lg shadow-sm hover:shadow">
-            <div className="flex items-start gap-4">
-              <div className="flex-1">
-                <h3 className="font-semibold text-lg">{c.title}</h3>
-                <p className="text-slate-600 mt-1">{c.short}</p>
-                <div className="mt-3 flex items-center gap-2 text-sm text-slate-500">
-                  <BookOpen size={16} /> <span>{c.resources.length} resources</span>
-                  <span className="ml-4">{c.semester}</span>
-                </div>
-              </div>
-              <div className="flex flex-col gap-2">
-                <Link to={`/courses/${c.id}`} className="text-sm px-3 py-1 border rounded">View</Link>
-                <button className="text-sm px-3 py-1 border rounded">Edit</button>
-              </div>
-            </div>
-          </div>
+    <section id="courses" className="px-10 py-20 bg-white">
+      <h2 className="text-3xl font-bold mb-8 text-center">Courses</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {sampleCourses.map((c, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: i * 0.2 }}
+            className="p-6 bg-gray-100 rounded-2xl shadow"
+          >
+            <Folder className="mb-3" />
+            <h3 className="text-xl font-semibold">{c.title}</h3>
+            <p className="text-gray-700">{c.desc}</p>
+          </motion.div>
         ))}
       </div>
-    </div>
+    </section>
   );
 }
 
-function CourseDetail({ courses }) {
-  const { pathname } = window.location;
-  const id = pathname.split('/').pop();
-  const course = courses.find(c => c.id === id) || courses[0];
-  if (!course) return <div className="p-6">Course not found.</div>;
+//------------------------------------------
+// src/components/Footer.jsx
+//------------------------------------------
+import React from "react";
+
+export default function Footer() {
   return (
-    <div className="max-w-4xl mx-auto px-6 py-8">
-      <header>
-        <h2 className="text-2xl font-semibold">{course.title}</h2>
-        <p className="text-slate-600 mt-2">{course.short}</p>
-      </header>
-      <section className="mt-6">
-        <h3 className="font-semibold">Resources</h3>
-        <ul className="mt-4 space-y-3">
-          {course.resources.map(r => (
-            <li key={r.id} className="p-3 border rounded flex items-center justify-between">
-              <div>
-                <div className="font-medium">{r.title}</div>
-                <div className="text-sm text-slate-500">Type: {r.type}</div>
-              </div>
-              <div className="flex gap-2">
-                <a href={r.url} className="text-sm px-3 py-1 border rounded">Download</a>
-                <button className="text-sm px-3 py-1 border rounded">Preview</button>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </section>
-    </div>
+    <footer className="text-center py-6 bg-gray-200 mt-20 text-gray-700">
+      © 2025 Teaching Expo – All rights reserved.
+    </footer>
   );
 }
 
-function Resources({ courses }) {
-  const all = courses.flatMap(c => c.resources.map(r => ({ ...r, courseTitle: c.title })));
-  const [q, setQ] = useState('');
-  const filtered = all.filter(r => r.title.toLowerCase().includes(q.toLowerCase()) || r.courseTitle.toLowerCase().includes(q.toLowerCase()));
-  return (
-    <div className="max-w-6xl mx-auto px-6 py-10">
-      <h2 className="text-2xl font-semibold">All Resources</h2>
-      <div className="mt-4">
-        <input value={q} onChange={e => setQ(e.target.value)} placeholder="Search resources or course..." className="w-full md:w-1/2 p-2 border rounded" />
-      </div>
-      <div className="mt-6 grid md:grid-cols-2 gap-4">
-        {filtered.map(r => (
-          <div key={r.id + r.courseTitle} className="p-4 border rounded flex items-center justify-between">
-            <div>
-              <div className="font-medium">{r.title}</div>
-              <div className="text-sm text-slate-500">{r.courseTitle} • {r.type}</div>
-            </div>
-            <div className="flex gap-2">
-              <a href={r.url} className="px-3 py-1 border rounded text-sm">Download</a>
-            </div>
-          </div>
-        ))}
-        {filtered.length === 0 && <div className="p-6 text-slate-600">No resources match your search.</div>}
-      </div>
-    </div>
-  );
-}
+//------------------------------------------
+// .github/workflows/deploy.yml
+//------------------------------------------
+name: Deploy to GitHub Pages
 
-function About() {
-  return (
-    <div className="max-w-4xl mx-auto px-6 py-10">
-      <h2 className="text-2xl font-semibold">About</h2>
-      <div className="mt-4 text-slate-700">
-        <p><strong>Zineb Djihane Agli</strong> — Lecturer & curriculum designer. This hub showcases course materials, structured notes and practical exercises for undergraduate courses. Use this section to add your academic bio, publications, and teaching philosophy.</p>
-      </div>
-      <div className="mt-6 grid md:grid-cols-2 gap-4">
-        <div className="p-4 border rounded">
-          <h4 className="font-semibold">Teaching Philosophy</h4>
-          <p className="text-sm text-slate-600 mt-2">Learner-centred, skills-focused, and practical — assessments and labs reinforce theory with immediate application.</p>
-        </div>
-        <div className="p-4 border rounded">
-          <h4 className="font-semibold">Academic Profile</h4>
-          <p className="text-sm text-slate-600 mt-2">Replace this with degrees, institutions, and links to your publications or ORCID.</p>
-        </div>
-      </div>
-    </div>
-  );
-}
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
 
-function Contact() {
-  const [form, setForm] = useLocalStorage('teaching_contact', { name: '', email: '', message: '' });
-  const [sent, setSent] = useState(false);
-  function submit(e) {
-    e.preventDefault();
-    // in production, hook this to an email service or serverless function
-    setSent(true);
-  }
-  return (
-    <div className="max-w-3xl mx-auto px-6 py-10">
-      <h2 className="text-2xl font-semibold">Contact</h2>
-      <p className="text-slate-600 mt-2">Questions, requests for materials or collaboration inquiries — send a message.</p>
-      <form onSubmit={submit} className="mt-6 space-y-4">
-        <input required value={form.name} onChange={e=>setForm({...form, name: e.target.value})} placeholder="Your name" className="w-full p-2 border rounded" />
-        <input required value={form.email} onChange={e=>setForm({...form, email: e.target.value})} placeholder="Your email" className="w-full p-2 border rounded" />
-        <textarea required value={form.message} onChange={e=>setForm({...form, message: e.target.value})} placeholder="Message" className="w-full p-2 border rounded h-32" />
-        <div className="flex gap-2">
-          <button type="submit" className="px-4 py-2 bg-slate-800 text-white rounded">Send</button>
-          <button type="button" onClick={()=>{setForm({name:'',email:'',message:''}); setSent(false);}} className="px-4 py-2 border rounded">Reset</button>
-        </div>
-        {sent && <div className="text-green-600">Message stored locally (configure server to send emails).</div>}
-      </form>
-    </div>
-  );
-}
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-// ---------- Main App ----------
-export default function App() {
-  const [courses, setCourses] = useLocalStorage('teaching_courses', SAMPLE_COURSES);
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-  return (
-    <Router>
-      <div className="min-h-screen bg-slate-50 text-slate-800">
-        <Nav />
-        <Routes>
-          <Route path="/" element={<Home courses={courses} />} />
-          <Route path="/courses" element={<Courses courses={courses} />} />
-          <Route path="/courses/:id" element={<CourseDetail courses={courses} />} />
-          <Route path="/courses/:id/*" element={<CourseDetail courses={courses} />} />
-          <Route path="/resources" element={<Resources courses={courses} />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="*" element={<div className="p-8">Page not found. <Link to="/">Return home</Link></div>} />
-        </Routes>
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
-        <footer className="mt-12 border-t bg-white">
-          <div className="max-w-6xl mx-auto px-6 py-6 flex justify-between items-center text-sm text-slate-600">
-            <div>© {new Date().getFullYear()} Zineb Djihane Agli — Teaching Materials Exposition</div>
-            <div>Built with React • Tailwind • Framer Motion</div>
-          </div>
-        </footer>
-      </div>
-    </Router>
-  );
-}
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Upload production-ready files
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v2
 
